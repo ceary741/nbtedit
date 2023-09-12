@@ -3,19 +3,27 @@
 
 #include "nbt.h"
 
-nbt_tag parseEnd(nbt_pointer nbtp);
-nbt_tag parseByte(nbt_pointer nbtp);
-nbt_tag parseShort(nbt_pointer nbtp);
-nbt_tag parseInt(nbt_pointer nbtp);
-nbt_tag parseLong(nbt_pointer nbtp);
-nbt_tag parseFloat(nbt_pointer nbtp);
-nbt_tag parseDouble(nbt_pointer nbtp);
-nbt_tag parseByteArray(nbt_pointer nbtp);
-nbt_tag parseString(nbt_pointer nbtp);
-nbt_tag parseList(nbt_pointer nbtp);
-nbt_tag parseCompound(nbt_pointer nbtp);
-nbt_tag parseIntArray(nbt_pointer nbtp);
-nbt_tag parseLongArray(nbt_pointer nbtp);
+extern nbt_load (*readNbtsLoad[NBT_NUM])(nbt_pointer *pseek);
+
+nbt_load readByte(nbt_pointer *pseek);
+nbt_load readShort(nbt_pointer *pseek);
+nbt_load readInt(nbt_pointer *pseek);
+nbt_load readLong(nbt_pointer *pseek);
+nbt_load readFloat(nbt_pointer *pseek);
+nbt_load readDouble(nbt_pointer *pseek);
+nbt_load readByteArray(nbt_pointer *pseek);
+nbt_load readString(nbt_pointer *pseek);
+nbt_load readList(nbt_pointer *pseek);
+nbt_load readCompound(nbt_pointer *pseek);
+nbt_load readIntArray(nbt_pointer *pseek);
+nbt_load readLongArray(nbt_pointer *pseek);
+
+nbt chunkStructed(chunk_data data);
+nbt_tag nextTag(nbt_tag *plast_next, nbt_pointer *seek);
+nbt_tag readNbtHead(nbt_pointer *seek);
+nbt_load readNbtLoad(nbt_tag this_tag, nbt_pointer *seek);
+
+int freeChunk(nbt data);
 
 
 #endif
