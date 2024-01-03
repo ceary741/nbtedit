@@ -6,11 +6,9 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 
-
-
 #include "nbt.h"
-#include "chunk_structed.h"
-#include "print_chunk.h"
+#include "cnbt.h"
+#include "print_nbt.h"
 
 int main(void)
 {
@@ -35,6 +33,23 @@ int main(void)
 	*/
 
 	printNbt(this_nbt, 0);
+
+	nbt childnbt = nbt_GetItemOfName(this_nbt, "Heightmaps");
+	nbt cchildnbt = nbt_GetItemOfName(childnbt, "OCEAN_FLOOR");
+	int size = nbt_GetArraySize(cchildnbt);
+	printf("%s %d\n", cchildnbt->name, nbt_GetArraySize(cchildnbt));
+	uint64_t value;
+	for(int i = 0; i < size; i++)
+	{
+		if(nbt_GetArrayItem(cchildnbt, i, &value) < 0)
+		{
+			printf("error\n");
+		}
+		printf("%lld ", value);
+	}
+	printf("\n");
+	nbt com = nbt_GetItemOfIndex(this_nbt, 8);
+	printf("%p\n%p\n", com, childnbt);
 
 	return 0;
 }

@@ -7,7 +7,7 @@
 #include <zlib.h>
 
 #include "get_chunk.h"
-#include "chunk_structed.h"
+#include "cnbt.h"
 
 #define BLOCK_SIZE 4096
 

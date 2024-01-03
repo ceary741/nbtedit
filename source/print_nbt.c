@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "nbt.h"
-#include "print_chunk.h"
+#include "print_nbt.h"
 
 char *TAG_NAME[NBT_NUM] = 
 {

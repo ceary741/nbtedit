@@ -9,7 +9,7 @@
 
 
 #include "nbt.h"
-#include "chunk_structed.h"
+#include "cnbt.h"
 
 nbt_load (*readNbtsLoad[NBT_NUM])(nbt_pointer *pseek) = 
 {
@@ -67,8 +67,11 @@ int main(void)
 
 nbt chunkStructed(chunk_data data)
 {
-	nbt this_nbt;
-
+	nbt this_nbt = malloc(sizeof(struct nbt_tag));
+	this_nbt -> next = NULL;
+	this_nbt -> tag_id = TAG_COMPOUND;
+	this_nbt -> name_length = 0;
+	this_nbt -> name = NULL;
 
 	//puts("Start");
 	if( *((uint8_t*)data) != TAG_COMPOUND)
@@ -85,7 +88,7 @@ nbt chunkStructed(chunk_data data)
 
 	nbt_pointer *pseek = &data;
 
-	this_nbt = readCompound(pseek);
+	this_nbt -> data = readCompound(pseek);
 	//printf("CNT = %d", i);
 
 	//puts("End");
@@ -317,5 +320,63 @@ nbt_load readLongArray(nbt_pointer *pseek)
 }
 //nbt chunkStructed(chunk_data data)
 //{
+
+
+int nbt_GetArraySize(const nbt array)
+{
+	if(array -> tag_id != TAG_INTARRAY &&
+	   array -> tag_id != TAG_LONGARRAY &&
+	   array -> tag_id != TAG_BYTEARRAY)
+	{
+		return -1;
+	}
+	return ntohl(*(uint32_t*)(array->data));
+}
+
+int nbt_GetArrayItem(const nbt array, int index, uint64_t *value)
+{
+	if(array -> tag_id != TAG_INTARRAY &&
+	   array -> tag_id != TAG_LONGARRAY &&
+	   array -> tag_id != TAG_BYTEARRAY)
+	{
+		return -1;
+	}
+	*value =  ntohl(*(((uint32_t*)(array->data)) + index + 1));
+	return 1;
+}
+
+nbt nbt_GetItemOfName(const nbt this_nbt, const char* name)
+{
+	if(this_nbt -> tag_id != TAG_COMPOUND)
+	{
+		return NULL;
+	}
+	nbt_tag next = this_nbt -> data;
+
+	while(next != NULL)
+	{
+		if(strcmp(name, next -> name) == 0)
+		{
+			return next;
+		}
+		next = next -> next;
+	}
+	return NULL;
+}
+
+nbt nbt_GetItemOfIndex(const nbt this_nbt, int index)
+{
+	if(this_nbt -> tag_id != TAG_COMPOUND)
+	{
+		return NULL;
+	}
+	nbt_tag next = this_nbt -> data;
+
+	for(int i = 0; i < index && next != NULL; i++)
+	{
+		next = next -> next;
+	}
+	return next;;
+}
 
 

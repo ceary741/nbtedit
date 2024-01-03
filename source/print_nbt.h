@@ -1,5 +1,5 @@
-#ifndef __PRINT_CHUNK_H__
-#define __PRINT_CHUNK_H__
+#ifndef __PRINT_NBT_H__
+#define __PRINT_NBT_H__
 
 #include "nbt.h"
 
