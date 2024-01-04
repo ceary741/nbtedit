@@ -1,6 +1,8 @@
 #ifndef __NBT_H__
 #define __NBT_H__
 
+#include <stdint.h>
+
 #define NBT_NUM 13
 #define TAG_END			0
 #define TAG_BYTE 		1

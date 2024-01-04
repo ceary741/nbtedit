@@ -6,17 +6,20 @@ OBJS = \
 	cnbt.o \
 	print_nbt.o 
 
-SRC = $(patsubst %.o, %.c, $(OBJS))
+#SRC = $(patsubst %.o, %.c, $(OBJS))
 
 LDFLAGS = -lz
 
 cnbt_Test : cnbt_Test.o $(OBJS) 
-	$(CC) -g $(OBJS) $< $(LDFLAGS) -o $@
+	$(CC) -g $^ $(LDFLAGS) -o $@
 
 getChunk_Test : getChunk_Test.o $(OBJS) 
 	$(CC) -g $(OBJS) $< $(LDFLAGS) -o $@
 
 %.o : %.c %.h nbt.h
+	$(CC) -g -c $< -o $@
+
+%.o : %.c nbt.h
 	$(CC) -g -c $< -o $@
 
 clean :
