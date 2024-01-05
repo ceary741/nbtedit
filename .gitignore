@@ -1,1 +1,4 @@
 *.un~
+*DS_store
+*.swp
+*.mca
