@@ -9,9 +9,20 @@ OBJS = \
 #SRC = $(patsubst %.o, %.c, $(OBJS))
 
 LDFLAGS = -lz
-CCFLAGS = -g -DDEBUG
+CCFLAGS = -g 
+
+ifeq ($(shell uname),Linux)
+CCFLAGS += -DLinux
+endif
+ifeq ($(shell uname),Darwin)
+CCFLAGS += -DMacOs
+endif
+CCFLAGS += -DDEBUG
 
 cnbt_Test : cnbt_Test.o $(OBJS) 
+	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
+
+cnbt_Test_Debug : cnbt_Test.o $(OBJS) 
 	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
 
 getChunk_Test : getChunk_Test.o $(OBJS) 

@@ -3,18 +3,18 @@
 
 #include "nbt.h"
 
-int printByte(nbt_tag this_tag);
-int printShort(nbt_tag this_tag);
-int printInt(nbt_tag this_tag);
-int printLong(nbt_tag this_tag);
-int printFloat(nbt_tag this_tag);
-int printDouble(nbt_tag this_tag);
-int printByteArray(nbt_tag this_tag);
-int printString(nbt_tag this_tag);
-int printList(nbt_tag this_tag);
-int printCompound(nbt_tag this_tag);
-int printIntArray(nbt_tag this_tag);
-int printLongArray(nbt_tag this_tag);
+int printByte(nbt_load data);
+int printShort(nbt_load data);
+int printInt(nbt_load data);
+int printLong(nbt_load data);
+int printFloat(nbt_load data);
+int printDouble(nbt_load data);
+int printByteArray(nbt_load data);
+int printString(nbt_load data);
+int printList(nbt_load data);
+int printCompound(nbt_load data);
+int printIntArray(nbt_load data);
+int printLongArray(nbt_load data);
 
 int printNbtLoad(nbt_tag this_tag);
 
@@ -22,6 +22,7 @@ int printNbt(nbt this_nbt, int print_load);
 int _printNbt(nbt this_nbt, int print_load, int dp);
 int printfDebug(int ifhl, const char * restrict format, ...);
 int printdp(int dp);
+
 
 
 #endif

@@ -6,6 +6,7 @@
 #include "nbt.h"
 #include "print_nbt.h"
 
+
 char *TAG_NAME[NBT_NUM] = 
 {
 	"End",
@@ -23,7 +24,7 @@ char *TAG_NAME[NBT_NUM] =
 	"LongArray",
 };
 
-int (*printNbtsLoad[NBT_NUM])(nbt_tag this_tag) = 
+int (*printNbtsLoad[NBT_NUM])(nbt_load data) = 
 {
 //	[TAG_END]			=	printEnd,
 	[TAG_BYTE]			=	printByte,
@@ -39,6 +40,18 @@ int (*printNbtsLoad[NBT_NUM])(nbt_tag this_tag) =
 	[TAG_INTARRAY]		=	printIntArray,
 	[TAG_LONGARRAY]		=	printLongArray,
 };
+
+#ifdef Linux
+uint64_t htonll(uint64_t val)
+{
+	return (((uint64_t) htonl(val)) << 32) + htonl(val >> 32);
+}
+
+uint64_t ntohll(uint64_t val)
+{
+	return (((uint64_t) ntohl(val)) << 32) + ntohl(val >> 32);
+}
+#endif
 
 int printNbt(nbt this_nbt, int print_load)
 {
@@ -70,7 +83,7 @@ int printfDebug(int ifhl, const char * restrict format, ...)
 	if(ifhl)
 		printf("* ");
 	return res;
-#elif
+#else
 	return 0;
 #endif
 }
@@ -138,60 +151,102 @@ int _printNbt(nbt this_nbt, int print_load, int dp)
 
 int printNbtLoad(nbt_tag this_tag)
 {
-	return printNbtsLoad[this_tag->tag_id](this_tag);
+	return printNbtsLoad[this_tag->tag_id](this_tag->data);
 }
 
-int printByte(nbt_tag this_tag)
+int printByte(nbt_load data)
 {
-	printf("%d", *(int8_t *)(this_tag->data));
+	printf("%d", *(int8_t *)(data));
 	return 0;
 }
-int printShort(nbt_tag this_tag)
+int printShort(nbt_load data)
 {
-	printf("%d", (int16_t)ntohs(*(uint16_t *)(this_tag->data)));
+	printf("%d", (int16_t)ntohs(*(uint16_t *)(data)));
 	return 0;
 }
-int printInt(nbt_tag this_tag)
+int printInt(nbt_load data)
 {
-	printf("%d", (int32_t)ntohl(*(uint32_t *)(this_tag->data)));
+	printf("%d", (int32_t)ntohl(*(uint32_t *)(data)));
 	return 0;
 }
-int printLong(nbt_tag this_tag)
+int printLong(nbt_load data)
 {
-	printf("%lld", (int64_t)ntohll(*(uint64_t *)(this_tag->data)));
+	printf("%ld", (int64_t)ntohll(*(uint64_t *)(data)));
 	return 0;
 }
-int printFloat(nbt_tag this_tag)
+int printFloat(nbt_load data)
 {
-	printf("%f", (float)ntohl(*(uint32_t *)(this_tag->data)));
+	printf("%f", (float)ntohl(*(uint32_t *)(data)));
 	return 0;
 }
-int printDouble(nbt_tag this_tag)
+int printDouble(nbt_load data)
 {
-	printf("%f", (double)ntohll(*(uint64_t *)(this_tag->data)));
+	printf("%f", (double)ntohll(*(uint64_t *)(data)));
 	return 0;
 }
-int printByteArray(nbt_tag this_tag)
+int printByteArray(nbt_load data)
 {
-	return -1;
+	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	printf("[");
+	for(int i = 0; i < len; i++)
+	{
+		printByte(data+4+i);
+		if(i < len - 1)
+			printf(",");
+	}
+	printf("]");
+	return 0;
 }
-int printString(nbt_tag this_tag)
+int printString(nbt_load data)
 {
-	return -1;
+	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	printf("\"%s\"", data + 2);
+	return 0;
 }
-int printList(nbt_tag this_tag)
+int printList(nbt_load data)
 {
-	return -1;
+	int tag_id = *(uint8_t *)data;
+	if(tag_id == TAG_COMPOUND)
+		return 0;
+	int len = *(int32_t *)(data+1);
+	printf("[");
+	for(int i = 0; i < len; i++)
+	{
+		printNbtsLoad[tag_id](*(nbt_load *)(data+5+i*8));
+		if(i < len - 1)
+			printf(",");
+	}
+	printf("]");
+	return 0;
 }
-int printCompound(nbt_tag this_tag)
+int printCompound(nbt_load data)
 {
-	return -1;
+	return 0;
 }
-int printIntArray(nbt_tag this_tag)
+int printIntArray(nbt_load data)
 {
-	return -1;
+	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	printf("[");
+	for(int i = 0; i < len; i++)
+	{
+		printInt(data+4+4*i);
+		if(i < len - 1)
+			printf(",");
+	}
+	printf("]");
+	return 0;
 }
-int printLongArray(nbt_tag this_tag)
+int printLongArray(nbt_load data)
 {
-	return -1;
+	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	printf("[");
+	for(int i = 0; i < len; i++)
+	{
+		printInt(data+4+8*i);
+		if(i < len - 1)
+			printf(",");
+	}
+	printf("]");
+	return 0;
 }
+

@@ -223,7 +223,8 @@ nbt_load readString(nbt_pointer *pseek)
 {
 	nbt_pointer seek = *pseek;
 	uint16_t length = ntohs(*(uint16_t*)seek);
-	nbt_load this_load = malloc(length + 2);
+	nbt_load this_load = malloc(length + 3);
+	((char *)this_load)[length+2] = '\0';
 	memmove(this_load, seek, length+2);
 
 	/*
