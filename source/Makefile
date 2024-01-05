@@ -9,18 +9,19 @@ OBJS = \
 #SRC = $(patsubst %.o, %.c, $(OBJS))
 
 LDFLAGS = -lz
+CCFLAGS = -g -DDEBUG
 
 cnbt_Test : cnbt_Test.o $(OBJS) 
-	$(CC) -g $^ $(LDFLAGS) -o $@
+	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
 
 getChunk_Test : getChunk_Test.o $(OBJS) 
-	$(CC) -g $(OBJS) $< $(LDFLAGS) -o $@
+	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
 
 %.o : %.c %.h nbt.h
-	$(CC) -g -c $< -o $@
+	$(CC) $(CCFLAGS) -c $< -o $@
 
 %.o : %.c nbt.h
-	$(CC) -g -c $< -o $@
+	$(CC) $(CCFLAGS) -c $< -o $@
 
 clean :
 	rm -rf *.o getChunk_Test cnbt_Test

@@ -3,22 +3,25 @@
 
 #include "nbt.h"
 
-int printByte(nbt_pointer *pseek);
-int printShort(nbt_pointer *pseek);
-int printInt(nbt_pointer *pseek);
-int printLong(nbt_pointer *pseek);
-int printFloat(nbt_pointer *pseek);
-int printDouble(nbt_pointer *pseek);
-int printByteArray(nbt_pointer *pseek);
-int printString(nbt_pointer *pseek);
-int printList(nbt_pointer *pseek);
-int printCompound(nbt_pointer *pseek);
-int printIntArray(nbt_pointer *pseek);
-int printLongArray(nbt_pointer *pseek);
+int printByte(nbt_tag this_tag);
+int printShort(nbt_tag this_tag);
+int printInt(nbt_tag this_tag);
+int printLong(nbt_tag this_tag);
+int printFloat(nbt_tag this_tag);
+int printDouble(nbt_tag this_tag);
+int printByteArray(nbt_tag this_tag);
+int printString(nbt_tag this_tag);
+int printList(nbt_tag this_tag);
+int printCompound(nbt_tag this_tag);
+int printIntArray(nbt_tag this_tag);
+int printLongArray(nbt_tag this_tag);
+
+int printNbtLoad(nbt_tag this_tag);
 
 int printNbt(nbt this_nbt, int print_load);
 int _printNbt(nbt this_nbt, int print_load, int dp);
-nbt_load printNbtLoad(nbt_tag this_tag, nbt_pointer *seek);
+int printfDebug(int ifhl, const char * restrict format, ...);
+int printdp(int dp);
 
 
 #endif
