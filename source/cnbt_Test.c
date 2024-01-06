@@ -12,8 +12,8 @@
 
 int main(void)
 {
-	//int fd = open("../data/chunk/q.nbt", O_RDONLY); 
-	int fd = open("../data/generator_t2.nbt", O_RDONLY); 
+	int fd = open("../data/chunk/q.nbt", O_RDONLY); 
+	//int fd = open("../data/generator_t2.nbt", O_RDONLY); 
 	int len = lseek(fd, 0, SEEK_END);
 	chunk_data data = mmap(NULL, len, PROT_READ, MAP_FILE|MAP_PRIVATE, fd, 0);
 	if(data == MAP_FAILED)

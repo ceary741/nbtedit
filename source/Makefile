@@ -17,7 +17,7 @@ endif
 ifeq ($(shell uname),Darwin)
 CCFLAGS += -DMacOs
 endif
-CCFLAGS += -DDEBUG
+#CCFLAGS += -DDEBUG
 
 cnbt_Test : cnbt_Test.o $(OBJS) 
 	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@

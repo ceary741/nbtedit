@@ -2,3 +2,6 @@
 *DS_store
 *.swp
 *.mca
+*.o
+out*
+*Test

@@ -88,30 +88,31 @@ int printfDebug(int ifhl, const char * restrict format, ...)
 #endif
 }
 	
-
 int _printNbt(nbt this_nbt, int print_load, int dp)
 {
 	nbt_tag this_tag = (nbt_tag)(this_nbt);
 	for(int i = 0; i < 9999; i++)
 	{
+		if(i != 0)
+			printf(",\n");
 		printdp(dp);
 		printfDebug(1, "%d %s", i, TAG_NAME[this_tag->tag_id]);
-		printf("%s : ", this_tag -> name);
+		if(this_tag -> name)
+			printf("%s : ", this_tag -> name);
 		printNbtLoad(this_tag);
-		printf("\n");
 		void *data = this_tag -> data;
 		if(this_tag -> tag_id == TAG_COMPOUND)
 		{
 			if(this_tag -> data == NULL)
 			{
-				printdp(dp);
-				printf("{}\n");
+				printf("{}");
 			} else {
+				printf("\n");
 				printdp(dp);
 				printf("{\n");
 				_printNbt(this_tag -> data, print_load, dp+1);
 				printdp(dp);
-				printf("}\n");
+				printf("}");
 			}
 		}
 		else if(this_tag -> tag_id == TAG_LIST && *(uint8_t *)data == TAG_COMPOUND)
@@ -125,6 +126,7 @@ int _printNbt(nbt this_nbt, int print_load, int dp)
 				printdp(dp);
 				printf("[]\n");
 			} else {
+				printf("\n");
 				printdp(dp);
 				printf("[\n");
 				for(int j = 0; j < num; j++)
@@ -133,17 +135,23 @@ int _printNbt(nbt this_nbt, int print_load, int dp)
 					printf("{\n");
 					_printNbt((nbt)*(uint64_t*)(data+j*8), print_load, dp+1);
 					printdp(dp);
-					printf("}\n");
+					printf("}");
+					if(j == num-1)
+						printf("\n");
+					else
+						printf(",\n");
 				}
 				printdp(dp);
-				printf("]\n");
+				printf("]");
 			}
-			
 		}
 
 		this_tag = this_tag -> next;
 		if(this_tag == NULL)
+		{
+			printf("\n");
 			break;
+		}
 	}
 
 	return 0;
@@ -156,12 +164,12 @@ int printNbtLoad(nbt_tag this_tag)
 
 int printByte(nbt_load data)
 {
-	printf("%d", *(int8_t *)(data));
+	printf("%dB", *(int8_t *)(data));
 	return 0;
 }
 int printShort(nbt_load data)
 {
-	printf("%d", (int16_t)ntohs(*(uint16_t *)(data)));
+	printf("%dS", (int16_t)ntohs(*(uint16_t *)(data)));
 	return 0;
 }
 int printInt(nbt_load data)
@@ -171,23 +179,23 @@ int printInt(nbt_load data)
 }
 int printLong(nbt_load data)
 {
-	printf("%ld", (int64_t)ntohll(*(uint64_t *)(data)));
+	printf("%ldL", (int64_t)ntohll(*(uint64_t *)(data)));
 	return 0;
 }
 int printFloat(nbt_load data)
 {
-	printf("%f", (float)ntohl(*(uint32_t *)(data)));
+	printf("%fF", (float)ntohl(*(uint32_t *)(data)));
 	return 0;
 }
 int printDouble(nbt_load data)
 {
-	printf("%f", (double)ntohll(*(uint64_t *)(data)));
+	printf("%fD", (double)ntohll(*(uint64_t *)(data)));
 	return 0;
 }
 int printByteArray(nbt_load data)
 {
 	int len = (int32_t)ntohl(*(uint32_t *)(data));
-	printf("[");
+	printf("[B;");
 	for(int i = 0; i < len; i++)
 	{
 		printByte(data+4+i);
@@ -226,7 +234,7 @@ int printCompound(nbt_load data)
 int printIntArray(nbt_load data)
 {
 	int len = (int32_t)ntohl(*(uint32_t *)(data));
-	printf("[");
+	printf("[I;");
 	for(int i = 0; i < len; i++)
 	{
 		printInt(data+4+4*i);
@@ -239,7 +247,7 @@ int printIntArray(nbt_load data)
 int printLongArray(nbt_load data)
 {
 	int len = (int32_t)ntohl(*(uint32_t *)(data));
-	printf("[");
+	printf("[L;");
 	for(int i = 0; i < len; i++)
 	{
 		printInt(data+4+8*i);
