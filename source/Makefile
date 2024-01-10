@@ -4,7 +4,8 @@ LD = gcc
 OBJS = \
 	get_chunk.o \
 	cnbt.o \
-	print_nbt.o 
+	print_nbt.o \
+	parse_snbt.o
 
 #SRC = $(patsubst %.o, %.c, $(OBJS))
 
@@ -19,10 +20,10 @@ CCFLAGS += -DMacOs
 endif
 #CCFLAGS += -DDEBUG
 
-cnbt_Test : cnbt_Test.o $(OBJS) 
+parse_snbt_Test : parse_snbt_Test.o $(OBJS) 
 	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
 
-cnbt_Test_Debug : cnbt_Test.o $(OBJS) 
+cnbt_Test : cnbt_Test.o $(OBJS) 
 	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
 
 getChunk_Test : getChunk_Test.o $(OBJS) 
