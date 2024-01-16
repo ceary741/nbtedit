@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <sys/mman.h>
 #include <zlib.h>
+#include <arpa/inet.h>
 
 #include "get_chunk.h"
 #include "cnbt.h"
@@ -44,7 +45,7 @@ int getChunk(void **chunk, int x, int z)
 	
 	uint64_t data_uncompressed_len;
 	int status = uncompress(data_uncompressed, &data_uncompressed_len, data_compressed+5, data_len);
-	printf("%d\n", data_uncompressed_len/data_len);
+	printf("%ld\n", data_uncompressed_len/data_len);
 	*chunk = data_uncompressed;
 	return data_uncompressed_len;
 }

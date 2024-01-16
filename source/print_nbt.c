@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <arpa/inet.h>
 
 #include "nbt.h"
 #include "print_nbt.h"
@@ -208,7 +209,7 @@ int printByteArray(nbt_load data)
 int printString(nbt_load data)
 {
 	int len = (int32_t)ntohl(*(uint32_t *)(data));
-	printf("\"%s\"", data + 2);
+	printf("\"%s\"", (char *)data + 2);
 	return 0;
 }
 int printList(nbt_load data)

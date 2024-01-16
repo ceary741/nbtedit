@@ -184,9 +184,3 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt_end)
 	}
 	return NULL;
 }
-
-
-
-	
-
-

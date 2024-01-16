@@ -36,4 +36,4 @@ getChunk_Test : getChunk_Test.o $(OBJS)
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 clean :
-	rm -rf *.o getChunk_Test cnbt_Test
+	rm -rf *.o *_Test 
