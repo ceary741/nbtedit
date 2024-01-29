@@ -43,16 +43,22 @@ static int readChar(char **seek, char c, char *snbt_end)
 	return 1;
 }
 
-static char* searchChar(char *seek, char c, char *snbt_end)
+static char* searchChar(char *seek, char* charlist, char *snbt_end)
 {
-	while(*seek != c)
+	while(seek != snbt_end)
 	{
-		if(seek != snbt_end-1)
+		int find = 0;
+		for(int i = 0; i < strlen(charlist); i++)
 		{
-			seek ++;
-		} else {
-			return seek;
+			if(*seek == charlist[i])
+			{
+				find = 1;
+				break;
+			}
 		}
+		if(find == 1)
+			break;
+		seek ++;
 	}
 	return seek;
 }
@@ -62,6 +68,15 @@ static int seekNoSpace(char **seek, char *snbt_end)
 	while(*seek != snbt_end && isspace(**seek))
 	{
 		(*seek) ++;
+	}
+	return 1;
+}
+
+static int rseekNoSpace(char **seek, char *snbt_start)
+{
+	while(*seek != snbt_start && isspace(**seek))
+	{
+		(*seek) --;
 	}
 	return 1;
 }
@@ -121,7 +136,7 @@ nbt nbt_ParseSnbt(char *snbt, uint64_t size, uint64_t *error)
 
 	while(1)
 	{
-		nbt_tag this_nbt = _ParseSnbt(&seek, root, snbt+size);
+		nbt_tag this_nbt = _ParseSnbt(&seek, root, snbt, snbt+size);
 		addToRoot(this_nbt, root);
 		int is_end = readChar(&seek, ',', snbt+size); //check res
 		if(is_end == -1)
@@ -134,10 +149,10 @@ nbt nbt_ParseSnbt(char *snbt, uint64_t size, uint64_t *error)
 	return root;
 }
 
-static nbt _ParseSnbt(char **seek, nbt root, char *snbt_end)
+static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 {
 	seekNoSpace(seek, snbt_end);
-	char *name_end = searchChar(*seek, ':', snbt_end);
+	char *name_end = searchChar(*seek, ":", snbt_end);
 	//if(name_end == snbt_end)
 	int name_len = name_end - *seek;
 	strncpy(buf, *seek, name_len);
@@ -156,7 +171,7 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt_end)
 	if(**seek == '\"')
 	{
 		this_nbt -> tag_id = TAG_STRING;
-		char *str_end = searchChar((*seek)+1, '\"', snbt_end);
+		char *str_end = searchChar((*seek)+1, "\"", snbt_end);
 		if(str_end == snbt_end)
 		{
 			free(this_nbt -> name);
@@ -169,9 +184,28 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt_end)
 
 		*seek = str_end + 1;
 		return this_nbt;
-	} else if(isNumStart(**seek))
+	}
+
+	else if(isNumStart(**seek))
 	{
-		return NULL;
+		nbt_tag res;
+		char *num_end = searchChar(*seek, ",}", snbt_end);
+		num_end--;
+		rseekNoSpace(&num_end, snbt);
+
+		switch(*num_end) {
+			case 'b':
+			case 'B':
+				this_nbt -> tag_id = TAG_BYTE;
+				this_nbt -> data = malloc(sizeof(int8_t));
+				*(int8_t*)(this_nbt->data) = strtol(*seek, NULL, 10);
+				res = this_nbt;
+				break;
+		}
+
+		*seek = searchChar(*seek, ",}", snbt_end);
+		return res;
+
 	} else if(**seek == '[')
 	{
 		return NULL;
