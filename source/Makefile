@@ -10,7 +10,7 @@ OBJS = \
 #SRC = $(patsubst %.o, %.c, $(OBJS))
 
 LDFLAGS = -lz
-CCFLAGS = -g 
+CCFLAGS = -g -O0
 
 ifeq ($(shell uname),Linux)
 CCFLAGS += -DLinux

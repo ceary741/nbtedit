@@ -7,5 +7,11 @@
 	num_6 : "this_is_a_string6",
 	b : 3b,
 	s : 3b,
-	i : 45b
+	i : 45b,
+	b : 3s,
+	s : 3s,
+	i : 45s,
+	b : -3l,
+	s : 3f,
+	i : 45d
 }

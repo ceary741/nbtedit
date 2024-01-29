@@ -2,11 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <arpa/inet.h>
 
 #include "nbt.h"
 #include "parse_snbt.h"
 
 char buf[4096];
+
+#ifdef Linux
+static uint64_t htonll(uint64_t val)
+{
+	return (((uint64_t) htonl(val)) << 32) + htonl(val >> 32);
+}
+
+static uint64_t ntohll(uint64_t val)
+{
+	return (((uint64_t) ntohl(val)) << 32) + ntohl(val >> 32);
+}
+#endif
 
 static int isNumChar(char c)
 {
@@ -199,6 +212,42 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 				this_nbt -> tag_id = TAG_BYTE;
 				this_nbt -> data = malloc(sizeof(int8_t));
 				*(int8_t*)(this_nbt->data) = strtol(*seek, NULL, 10);
+				res = this_nbt;
+				break;
+			case 's':
+			case 'S':
+				this_nbt -> tag_id = TAG_SHORT;
+				this_nbt -> data = malloc(sizeof(int16_t));
+				*(int16_t*)(this_nbt->data) = htons(strtol(*seek, NULL, 10));
+				res = this_nbt;
+				break;
+			case 'l':
+			case 'L':
+				this_nbt -> tag_id = TAG_LONG;
+				this_nbt -> data = malloc(sizeof(int64_t));
+				*(int64_t*)(this_nbt->data) = htonll(strtoll(*seek, NULL, 10));
+				res = this_nbt;
+				break;
+			case 'f':
+			case 'F':
+				this_nbt -> tag_id = TAG_FLOAT;
+				this_nbt -> data = malloc(sizeof(float));
+				float float_num = strtof(*seek, NULL);
+				uint8_t *dst = this_nbt -> data;
+				uint8_t *src = &float_num;
+				*dst = *(src+3);
+				*(dst+1) = *(src+3);
+				*(dst+2) = *(src+2);
+				*(dst+3) = *(src+1);
+				res = this_nbt;
+				break;
+			case 'd':
+			case 'D':
+				this_nbt -> tag_id = TAG_DOUBLE;
+				this_nbt -> data = malloc(sizeof(double));
+				double double_num = strtod(*seek, NULL);
+				int64_t *p_double_num = &double_num;
+				*(double*)(this_nbt->data) = htonll(*p_double_num);
 				res = this_nbt;
 				break;
 		}

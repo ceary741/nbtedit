@@ -43,12 +43,12 @@ int (*printNbtsLoad[NBT_NUM])(nbt_load data) =
 };
 
 #ifdef Linux
-uint64_t htonll(uint64_t val)
+static uint64_t htonll(uint64_t val)
 {
 	return (((uint64_t) htonl(val)) << 32) + htonl(val >> 32);
 }
 
-uint64_t ntohll(uint64_t val)
+static uint64_t ntohll(uint64_t val)
 {
 	return (((uint64_t) ntohl(val)) << 32) + ntohl(val >> 32);
 }
@@ -185,7 +185,14 @@ int printLong(nbt_load data)
 }
 int printFloat(nbt_load data)
 {
-	printf("%fF", (float)ntohl(*(uint32_t *)(data)));
+	float num;
+	uint8_t *src = data;
+	uint8_t *dst = &num;
+	*dst = *(src+3);
+	*(dst+1) = *(src+3);
+	*(dst+2) = *(src+2);
+	*(dst+3) = *(src+1);
+	printf("%fF", num);
 	return 0;
 }
 int printDouble(nbt_load data)
