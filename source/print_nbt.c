@@ -180,7 +180,7 @@ int printInt(nbt_load data)
 }
 int printLong(nbt_load data)
 {
-	printf("%ldL", (int64_t)ntohll(*(uint64_t *)(data)));
+	printf("%lldL", (int64_t)ntohll(*(uint64_t *)(data)));
 	return 0;
 }
 int printFloat(nbt_load data)
@@ -226,7 +226,7 @@ int printByteArray(nbt_load data)
 }
 int printString(nbt_load data)
 {
-	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	//int len = (int32_t)ntohl(*(uint32_t *)(data));
 	printf("\"%s\"", (char *)data + 2);
 	return 0;
 }

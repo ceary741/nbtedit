@@ -2,10 +2,10 @@ CC = gcc
 LD = gcc
 
 OBJS = \
-	get_chunk.o \
 	cnbt.o \
 	print_nbt.o \
-	parse_snbt.o
+	parse_snbt.o \
+#	get_chunk.o \
 
 #SRC = $(patsubst %.o, %.c, $(OBJS))
 

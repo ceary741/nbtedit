@@ -191,8 +191,8 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 			free(this_nbt);
 			return NULL;
 		}
-		this_nbt -> data = malloc(str_end-*seek);
-		strncpy(this_nbt->data, (*seek)+1, str_end-*seek-1);
+		this_nbt -> data = malloc(str_end-*seek+2);
+		strncpy(this_nbt->data + 2, (*seek)+1, str_end-*seek-1);
 		((char *)(this_nbt->data))[str_end-*seek-1] = '\0';
 
 		*seek = str_end + 1;
