@@ -189,15 +189,26 @@ int printFloat(nbt_load data)
 	uint8_t *src = data;
 	uint8_t *dst = &num;
 	*dst = *(src+3);
-	*(dst+1) = *(src+3);
-	*(dst+2) = *(src+2);
-	*(dst+3) = *(src+1);
+	*(dst+1) = *(src+2);
+	*(dst+2) = *(src+1);
+	*(dst+3) = *src;
 	printf("%fF", num);
 	return 0;
 }
 int printDouble(nbt_load data)
 {
-	printf("%fD", (double)ntohll(*(uint64_t *)(data)));
+	double num;
+	uint8_t *src = data;
+	uint8_t *dst = &num;
+	*dst = *(src+7);
+	*(dst+1) = *(src+6);
+	*(dst+2) = *(src+5);
+	*(dst+3) = *(src+4);
+	*(dst+4) = *(src+3);
+	*(dst+5) = *(src+2);
+	*(dst+6) = *(src+1);
+	*(dst+7) = *src;
+	printf("%fD", num);
 	return 0;
 }
 int printByteArray(nbt_load data)
