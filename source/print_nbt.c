@@ -170,45 +170,47 @@ int printByte(nbt_load data)
 }
 int printShort(nbt_load data)
 {
-	printf("%dS", (int16_t)ntohs(*(uint16_t *)(data)));
+	printf("%dS", *(int16_t *)(data));
 	return 0;
 }
 int printInt(nbt_load data)
 {
-	printf("%d", (int32_t)ntohl(*(uint32_t *)(data)));
+	printf("%d", *(int32_t *)(data));
 	return 0;
 }
 int printLong(nbt_load data)
 {
-	printf("%lldL", (int64_t)ntohll(*(uint64_t *)(data)));
+	printf("%lldL", *(uint64_t *)(data));
 	return 0;
 }
 int printFloat(nbt_load data)
 {
-	float num;
-	uint8_t *src = data;
-	uint8_t *dst = &num;
-	*dst = *(src+3);
-	*(dst+1) = *(src+2);
-	*(dst+2) = *(src+1);
-	*(dst+3) = *src;
-	printf("%fF", num);
+//	float num;
+//	uint8_t *src = data;
+//	uint8_t *dst = &num;
+//	*dst = *(src+3);
+//	*(dst+1) = *(src+2);
+//	*(dst+2) = *(src+1);
+//	*(dst+3) = *src;
+//	printf("%fF", num);
+	printf("%fF", *(float*)data);
 	return 0;
 }
 int printDouble(nbt_load data)
 {
-	double num;
-	uint8_t *src = data;
-	uint8_t *dst = &num;
-	*dst = *(src+7);
-	*(dst+1) = *(src+6);
-	*(dst+2) = *(src+5);
-	*(dst+3) = *(src+4);
-	*(dst+4) = *(src+3);
-	*(dst+5) = *(src+2);
-	*(dst+6) = *(src+1);
-	*(dst+7) = *src;
-	printf("%fD", num);
+//	double num;
+//	uint8_t *src = data;
+//	uint8_t *dst = &num;
+//	*dst = *(src+7);
+//	*(dst+1) = *(src+6);
+//	*(dst+2) = *(src+5);
+//	*(dst+3) = *(src+4);
+//	*(dst+4) = *(src+3);
+//	*(dst+5) = *(src+2);
+//	*(dst+6) = *(src+1);
+//	*(dst+7) = *src;
+//	printf("%fD", num);
+	printf("%fD", *(double*)data);
 	return 0;
 }
 int printByteArray(nbt_load data)
@@ -226,7 +228,6 @@ int printByteArray(nbt_load data)
 }
 int printString(nbt_load data)
 {
-	//int len = (int32_t)ntohl(*(uint32_t *)(data));
 	printf("\"%s\"", (char *)data + 2);
 	return 0;
 }

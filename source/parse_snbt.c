@@ -193,7 +193,7 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 		}
 		this_nbt -> data = malloc(str_end-*seek+2);
 		strncpy(this_nbt->data + 2, (*seek)+1, str_end-*seek-1);
-		((char *)(this_nbt->data))[str_end-*seek-1] = '\0';
+		((char *)(this_nbt->data))[str_end-*seek-1+2] = '\0';
 
 		*seek = str_end + 1;
 		return this_nbt;
@@ -207,8 +207,8 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 		rseekNoSpace(&num_end, snbt);
 
 		switch(*num_end) {
-			uint8_t *dst;
-			uint8_t *src;
+//			uint8_t *dst;
+//			uint8_t *src;
 			case 'b':
 			case 'B':
 				this_nbt -> tag_id = TAG_BYTE;
@@ -220,14 +220,14 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 			case 'S':
 				this_nbt -> tag_id = TAG_SHORT;
 				this_nbt -> data = malloc(sizeof(int16_t));
-				*(int16_t*)(this_nbt->data) = htons(strtol(*seek, NULL, 10));
+				*(int16_t*)(this_nbt->data) = strtol(*seek, NULL, 10);
 				res = this_nbt;
 				break;
 			case 'l':
 			case 'L':
 				this_nbt -> tag_id = TAG_LONG;
 				this_nbt -> data = malloc(sizeof(int64_t));
-				*(int64_t*)(this_nbt->data) = htonll(strtoll(*seek, NULL, 10));
+				*(int64_t*)(this_nbt->data) = strtoll(*seek, NULL, 10);
 				res = this_nbt;
 				break;
 			case 'f':
@@ -235,12 +235,12 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 				this_nbt -> tag_id = TAG_FLOAT;
 				this_nbt -> data = malloc(sizeof(float));
 				float float_num = strtof(*seek, NULL);
-				dst = this_nbt -> data;
-				src = &float_num;
-				*dst = *(src+3);
-				*(dst+1) = *(src+2);
-				*(dst+2) = *(src+1);
-				*(dst+3) = *src;
+				*(float*)(this_nbt -> data) = float_num;
+//				src = &float_num;
+//				*dst = *(src+3);
+//				*(dst+1) = *(src+2);
+//				*(dst+2) = *(src+1);
+//				*(dst+3) = *src;
 				res = this_nbt;
 				break;
 			case 'd':
@@ -248,16 +248,16 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 				this_nbt -> tag_id = TAG_DOUBLE;
 				this_nbt -> data = malloc(sizeof(double));
 				double double_num = strtod(*seek, NULL);
-				dst = this_nbt -> data;
-				src = &double_num;
-				*dst = *(src+7);
-				*(dst+1) = *(src+6);
-				*(dst+2) = *(src+5);
-				*(dst+3) = *(src+4);
-				*(dst+4) = *(src+3);
-				*(dst+5) = *(src+2);
-				*(dst+6) = *(src+1);
-				*(dst+7) = *src;
+				*(double*)(this_nbt -> data) = double_num;
+//				src = &double_num;
+//				*dst = *(src+7);
+//				*(dst+1) = *(src+6);
+//				*(dst+2) = *(src+5);
+//				*(dst+3) = *(src+4);
+//				*(dst+4) = *(src+3);
+//				*(dst+5) = *(src+2);
+//				*(dst+6) = *(src+1);
+//				*(dst+7) = *src;
 				res = this_nbt;
 				break;
 		}
