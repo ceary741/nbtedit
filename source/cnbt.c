@@ -6,10 +6,9 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 
-
-
 #include "nbt.h"
 #include "cnbt.h"
+#include "ulib.h"
 
 nbt_load (*readNbtsLoad[NBT_NUM])(nbt_pointer *pseek) = 
 {
@@ -151,6 +150,7 @@ nbt_load readShort(nbt_pointer *pseek)
 	nbt_pointer seek = *pseek;
 	nbt_load this_load = malloc(2);
 	memmove(this_load, seek, 2);
+	reverse_16(this_load);
 	seek += 2;
 	*pseek = seek;
 
@@ -161,6 +161,7 @@ nbt_load readInt(nbt_pointer *pseek)
 	nbt_pointer seek = *pseek;
 	nbt_load this_load = malloc(4);
 	memmove(this_load, seek, 4);
+	reverse_32(this_load);
 	seek += 4;
 	*pseek = seek;
 
@@ -174,43 +175,44 @@ nbt_load readLong(nbt_pointer *pseek)
 	nbt_pointer seek = *pseek;
 	nbt_load this_load = malloc(8);
 	memmove(this_load, seek, 8);
+	reverse_64(this_load);
 	seek += 8;
 	*pseek = seek;
 
 	return this_load;
 }
 
-//un
 nbt_load readFloat(nbt_pointer *pseek)
 {
 	nbt_pointer seek = *pseek;
 	nbt_load this_load = malloc(4);
 	memmove(this_load, seek, 4);
+	reverse_32(this_load);
 	seek += 4;
 	*pseek = seek;
 
 	return this_load;
 }
 
-//un
 nbt_load readDouble(nbt_pointer *pseek)
 {
 	nbt_pointer seek = *pseek;
 	nbt_load this_load = malloc(8);
 	memmove(this_load, seek, 8);
+	reverse_64(this_load);
 	seek += 8;
 	*pseek = seek;
 
 	return this_load;
 }
 
-//un
 nbt_load readByteArray(nbt_pointer *pseek)
 {
 	nbt_pointer seek = *pseek;
 	uint32_t size = ntohl(*(uint32_t*)seek);
 	nbt_load this_load = malloc(size+4);
 	memmove(this_load, seek, size+4);
+	reverse_32(this_load);
 	seek += 4;
 	seek += size;
 
@@ -292,13 +294,17 @@ nbt_load readCompound(nbt_pointer *pseek)
 	
 	return this_nbt;
 }
-//un
+
 nbt_load readIntArray(nbt_pointer *pseek)
 {
 	nbt_pointer seek = *pseek;
 	uint32_t size = ntohl(*(uint32_t*)seek);
 	nbt_load this_load = malloc(4*size+4);
 	memmove(this_load, seek, 4*size+4);
+	reverse_32(this_load);
+	for(int i = 0; i < size; i++) {
+		reverse_32(this_load + 4*i + 4);
+	}
 	seek += 4;
 	seek += 4*size;
 
@@ -312,6 +318,10 @@ nbt_load readLongArray(nbt_pointer *pseek)
 	uint32_t size = ntohl(*(uint32_t*)seek);
 	nbt_load this_load = malloc(8*size+4);
 	memmove(this_load, seek, 8*size+4);
+	reverse_32(this_load);
+	for(int i = 0; i < size; i++) {
+		reverse_64(this_load + 8*i + 4);
+	}
 	seek += 4;
 	seek += 8*size;
 

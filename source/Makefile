@@ -5,6 +5,7 @@ OBJS = \
 	cnbt.o \
 	print_nbt.o \
 	parse_snbt.o \
+	ulib.o \
 #	get_chunk.o \
 
 #SRC = $(patsubst %.o, %.c, $(OBJS))
@@ -32,8 +33,8 @@ getChunk_Test : getChunk_Test.o $(OBJS)
 %.o : %.c %.h nbt.h
 	$(CC) $(CCFLAGS) -c $< -o $@
 
-%.o : %.c nbt.h
-	$(CC) $(CCFLAGS) -c $< -o $@
+#%.o : %.c nbt.h
+#	$(CC) $(CCFLAGS) -c $< -o $@
 
 clean :
 	rm -rf *.o *_Test 

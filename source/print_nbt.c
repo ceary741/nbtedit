@@ -7,7 +7,6 @@
 #include "nbt.h"
 #include "print_nbt.h"
 
-
 char *TAG_NAME[NBT_NUM] = 
 {
 	"End",
@@ -185,37 +184,17 @@ int printLong(nbt_load data)
 }
 int printFloat(nbt_load data)
 {
-//	float num;
-//	uint8_t *src = data;
-//	uint8_t *dst = &num;
-//	*dst = *(src+3);
-//	*(dst+1) = *(src+2);
-//	*(dst+2) = *(src+1);
-//	*(dst+3) = *src;
-//	printf("%fF", num);
 	printf("%fF", *(float*)data);
 	return 0;
 }
 int printDouble(nbt_load data)
 {
-//	double num;
-//	uint8_t *src = data;
-//	uint8_t *dst = &num;
-//	*dst = *(src+7);
-//	*(dst+1) = *(src+6);
-//	*(dst+2) = *(src+5);
-//	*(dst+3) = *(src+4);
-//	*(dst+4) = *(src+3);
-//	*(dst+5) = *(src+2);
-//	*(dst+6) = *(src+1);
-//	*(dst+7) = *src;
-//	printf("%fD", num);
 	printf("%fD", *(double*)data);
 	return 0;
 }
 int printByteArray(nbt_load data)
 {
-	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	uint32_t len = *(uint32_t *)(data);
 	printf("[B;");
 	for(int i = 0; i < len; i++)
 	{
@@ -253,7 +232,7 @@ int printCompound(nbt_load data)
 }
 int printIntArray(nbt_load data)
 {
-	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	uint32_t len = *(uint32_t *)(data);
 	printf("[I;");
 	for(int i = 0; i < len; i++)
 	{
@@ -266,11 +245,11 @@ int printIntArray(nbt_load data)
 }
 int printLongArray(nbt_load data)
 {
-	int len = (int32_t)ntohl(*(uint32_t *)(data));
+	uint32_t len = *(uint32_t *)(data);
 	printf("[L;");
 	for(int i = 0; i < len; i++)
 	{
-		printInt(data+4+8*i);
+		printLong(data+4+8*i);
 		if(i < len - 1)
 			printf(",");
 	}

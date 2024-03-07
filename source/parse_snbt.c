@@ -236,11 +236,6 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 				this_nbt -> data = malloc(sizeof(float));
 				float float_num = strtof(*seek, NULL);
 				*(float*)(this_nbt -> data) = float_num;
-//				src = &float_num;
-//				*dst = *(src+3);
-//				*(dst+1) = *(src+2);
-//				*(dst+2) = *(src+1);
-//				*(dst+3) = *src;
 				res = this_nbt;
 				break;
 			case 'd':
@@ -249,15 +244,6 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 				this_nbt -> data = malloc(sizeof(double));
 				double double_num = strtod(*seek, NULL);
 				*(double*)(this_nbt -> data) = double_num;
-//				src = &double_num;
-//				*dst = *(src+7);
-//				*(dst+1) = *(src+6);
-//				*(dst+2) = *(src+5);
-//				*(dst+3) = *(src+4);
-//				*(dst+4) = *(src+3);
-//				*(dst+5) = *(src+2);
-//				*(dst+6) = *(src+1);
-//				*(dst+7) = *src;
 				res = this_nbt;
 				break;
 		}
