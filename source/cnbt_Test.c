@@ -10,8 +10,8 @@
 #include "cnbt.h"
 #include "print_nbt.h"
 
-//#define TEST_FILE "../data/chunk/q.nbt"
-#define TEST_FILE "../data/generator_t2.nbt"
+#define TEST_FILE "../data/nbt/q.nbt"
+//#define TEST_FILE "../data/nbt/generator_t2.nbt"
 
 int main(void)
 {

@@ -13,7 +13,7 @@
 
 int main(void)
 {
-	int fd = open("../data/test.snbt", O_RDONLY); 
+	int fd = open("../data/snbt/test.snbt", O_RDONLY); 
 	//int fd = open("../data/generator_t2.nbt", O_RDONLY); 
 	int len = lseek(fd, 0, SEEK_END);
 	char* snbt = mmap(NULL, len, PROT_READ, MAP_FILE|MAP_PRIVATE, fd, 0);

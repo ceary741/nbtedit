@@ -247,7 +247,7 @@ nbt_load readList(nbt_pointer *pseek)
 	uint8_t tag_id = *(uint8_t*)seek;
 	seek++;
 	uint32_t size = ntohl(*(uint32_t*)seek);
-	printf("num %d\n", size);
+	//printf("num %d\n", size);
 	seek += 4;
 	nbt_load this_load = malloc(5+8*size);
 	*(uint8_t*)this_load = tag_id;
