@@ -8,27 +8,14 @@
 
 
 
-#include "nbt.h"
-#include "chunk_structed.h"
-#include "print_chunk.h"
+#include "cnbt.h"
+#include "print_nbt.h"
 #include "get_chunk.h"
-
-extern int mcafd;
 
 int main(void)
 {
-	int fd = open("../data/region/r.0.0.mca", O_RDONLY); 
-	mcafd = fd;
-	//int len = lseek(fd, 0, SEEK_END);
-	//chunk_data data = mmap(NULL, len, PROT_READ, MAP_FILE|MAP_PRIVATE, fd, 0);
-	//if(data == MAP_FAILED)
-	//{
-	//	perror("mmap()");
-	//	return -1;
-	//}
-	
 	chunk_data data;
-	getChunk(&data, 0, 0);
+	getChunk(&data, 256, 256);
 	puts("---------------------");
 	nbt this_nbt = chunkStructed(data);
 	if(this_nbt == NULL)

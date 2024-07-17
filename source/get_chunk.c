@@ -6,13 +6,12 @@
 #include <sys/mman.h>
 #include <zlib.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 
 #include "get_chunk.h"
 #include "cnbt.h"
 
 #define BLOCK_SIZE 4096
-
-int mcafd;
 
 int getChunk(void **chunk, int x, int z)
 {
@@ -41,7 +40,7 @@ int getChunk(void **chunk, int x, int z)
 	}
 	chunk_data data_uncompressed = malloc(10*data_len);
 
-	puts("-----------------------------");
+	//puts("-----------------------------");
 	
 	uint64_t data_uncompressed_len;
 	int status = uncompress(data_uncompressed, &data_uncompressed_len, data_compressed+5, data_len);
@@ -52,5 +51,8 @@ int getChunk(void **chunk, int x, int z)
 
 int getMca(int x, int z)
 {
+	char buf[128];
+	sprintf(buf, "../data/region/r.%d.%d.mca", x/16/32, z/16/32);
+	int mcafd = open(buf, O_RDONLY); 
 	return mcafd;
 }

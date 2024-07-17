@@ -6,12 +6,12 @@ OBJS = \
 	print_nbt.o \
 	parse_snbt.o \
 	ulib.o \
-#	get_chunk.o \
+	get_chunk.o \
 
 #SRC = $(patsubst %.o, %.c, $(OBJS))
 
 LDFLAGS = -lz
-CCFLAGS = -g -O0
+CFLAGS = -g -O0
 
 ifeq ($(shell uname),Linux)
 CCFLAGS += -DLinux
@@ -22,19 +22,19 @@ endif
 #CCFLAGS += -DDEBUG
 
 parse_snbt_Test : parse_snbt_Test.o $(OBJS) 
-	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
 cnbt_Test : cnbt_Test.o $(OBJS) 
-	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
-getChunk_Test : getChunk_Test.o $(OBJS) 
-	$(CC) $(CCFLAGS) $^ $(LDFLAGS) -o $@
+get_chunk_Test : get_chunk_Test.o $(OBJS) 
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
 %.o : %.c %.h nbt.h
-	$(CC) $(CCFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 #%.o : %.c nbt.h
-#	$(CC) $(CCFLAGS) -c $< -o $@
+#	$(CC) $(CFLAGS) -c $< -o $@
 
 clean :
 	rm -rf *.o *_Test 
