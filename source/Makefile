@@ -21,13 +21,13 @@ CCFLAGS += -DMacOs
 endif
 #CCFLAGS += -DDEBUG
 
-parse_snbt_Test : parse_snbt_Test.o $(OBJS) 
+parse_snbt_Test : 	parse_snbt_Test.o 	$(OBJS) 
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
-cnbt_Test : cnbt_Test.o $(OBJS) 
+cnbt_Test : 		cnbt_Test.o 		$(OBJS) 
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
-get_chunk_Test : get_chunk_Test.o $(OBJS) 
+get_chunk_Test : 	get_chunk_Test.o 	$(OBJS) 
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
 %.o : %.c %.h nbt.h

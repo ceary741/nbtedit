@@ -2,3 +2,16 @@ nbt  -> cnbt   y
 cnbt -> nbt
 cnbt -> snbt   y
 snbt -> cnbt
+	Byte		y
+	Boolean
+	Short		y
+	Int			
+	Long		y
+	Float		y
+	Double		y
+	String		y
+	List
+	Compound
+	Byte Array
+	Int Array
+	Long Array

@@ -56,6 +56,8 @@ static int readChar(char **seek, char c, char *snbt_end)
 	return 1;
 }
 
+//return point of the char which appears first after seek and is in charlist, 
+//if there is no corresponding char in charlist, then return snbt_end.
 static char* searchChar(char *seek, char* charlist, char *snbt_end)
 {
 	while(seek != snbt_end)
@@ -130,6 +132,64 @@ static int addToRoot(nbt_tag this_nbt, nbt_tag root)
 	return -1;
 }
 
+static int whichType(char *seek, char *snbt_end)
+{
+	return -1;
+}
+
+static int isStringChar(char c)
+{
+	if(c == '.' || c == '_' || c == '+' || c == '-' 
+			|| c >= '0' && c <= '9' 
+			|| c >= 'a' && c <= 'z' 
+			|| c >= 'A' && c <= 'Z')
+		return 1;
+	return 0;
+}
+
+//pseek is the double pointer which points to the start of the string,
+//including the colon
+//return a copy of the string
+//return NULL if there is an ERROR
+static char* readString(char **pseek, char *snbt_end)
+{
+	char *start = *pseek;
+	char *end = start;
+	if(*start == '\'' || *start == '\"')
+	{
+		char charlist[2] = {*start, '\0'};
+		start++;
+		end = searchChar(start, charlist, snbt_end);
+		*pseek = end+1;
+	}
+	else
+	{
+		while(end != snbt_end && isStringChar(*end))
+		{
+			end++;
+		}
+		*pseek = end;
+	}
+
+	if(end == snbt_end)
+	{
+		printf("syntax error at\n");
+		return NULL;
+	}
+	if(end - start == 0)
+	{
+		printf("string is empty\n");
+		return NULL;
+	}
+
+	int len = end - start;
+	char *str = malloc(len+1);
+	strncpy(str, start, len);
+	str[len] = '\0';
+
+	return str;
+}
+
 nbt nbt_ParseSnbt(char *snbt, uint64_t size, uint64_t *error)
 {
 	char *seek = snbt;
@@ -165,20 +225,28 @@ nbt nbt_ParseSnbt(char *snbt, uint64_t size, uint64_t *error)
 static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 {
 	seekNoSpace(seek, snbt_end);
-	char *name_end = searchChar(*seek, ":", snbt_end);
-	//if(name_end == snbt_end)
-	int name_len = name_end - *seek;
-	strncpy(buf, *seek, name_len);
-	buf[name_len] = '\0';
-	rtrim(buf);
+	//char *name_end = searchChar(*seek, ":", snbt_end);
+	//int name_len = name_end - *seek;
+	//strncpy(buf, *seek, name_len);
+	//buf[name_len] = '\0';
+	//rtrim(buf);
 
+	//nbt_tag this_nbt = malloc(sizeof(struct nbt_tag));
+	//this_nbt -> next = NULL;
+	//this_nbt -> name_length = (uint16_t)strlen(buf);
+	//this_nbt -> name = malloc(strlen(buf)+1);
+	//strncpy(this_nbt->name, buf, strlen(buf)+1);
+
+	//*seek = name_end;
+	char *name = readString(seek, snbt_end);
+	if(name == NULL)
+		exit(-1);
 	nbt_tag this_nbt = malloc(sizeof(struct nbt_tag));
 	this_nbt -> next = NULL;
-	this_nbt -> name_length = (uint16_t)strlen(buf);
-	this_nbt -> name = malloc(strlen(buf)+1);
-	strncpy(this_nbt->name, buf, strlen(buf)+1);
+	this_nbt -> name_length = (uint16_t)strlen(name);
+	this_nbt -> name = name;
+	seekNoSpace(seek, snbt_end);
 
-	*seek = name_end;
 	readChar(seek, ':', snbt_end); //check res
 	seekNoSpace(seek, snbt_end);
 	if(**seek == '\"')
