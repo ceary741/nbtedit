@@ -252,18 +252,26 @@ static nbt _ParseSnbt(char **seek, nbt root, char *snbt, char *snbt_end)
 	if(**seek == '\"')
 	{
 		this_nbt -> tag_id = TAG_STRING;
-		char *str_end = searchChar((*seek)+1, "\"", snbt_end);
-		if(str_end == snbt_end)
+		char *name = readString(seek, snbt_end);
+		if(name == NULL)
 		{
 			free(this_nbt -> name);
 			free(this_nbt);
 			return NULL;
 		}
-		this_nbt -> data = malloc(str_end-*seek+2);
-		strncpy(this_nbt->data + 2, (*seek)+1, str_end-*seek-1);
-		((char *)(this_nbt->data))[str_end-*seek-1+2] = '\0';
+		this_nbt -> data = name;
+		//char *str_end = searchChar((*seek)+1, "\"", snbt_end);
+		//if(str_end == snbt_end)
+		//{
+		//	free(this_nbt -> name);
+		//	free(this_nbt);
+		//	return NULL;
+		//}
+		//this_nbt -> data = malloc(str_end-*seek+2);
+		//strncpy(this_nbt->data + 2, (*seek)+1, str_end-*seek-1);
+		//((char *)(this_nbt->data))[str_end-*seek-1+2] = '\0';
 
-		*seek = str_end + 1;
+		//*seek = str_end + 1;
 		return this_nbt;
 	}
 
